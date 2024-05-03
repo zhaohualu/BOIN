@@ -13,7 +13,8 @@ get.boundary(
   p.tox = 1.4 * target,
   cutoff.eli = 0.95,
   extrasafe = FALSE,
-  offset = 0.05
+  offset = 0.05,
+  fix13 = FALSE
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ expressed as the stopping boundary value in the result .}
 the stopping rule is when \code{extrasafe=TRUE}. A larger value leads
 to a more strict stopping rule. The default value
 (\code{offset=0.05}) generally works well.}
+
+\item{fix13}{a logical flag, default FALSE. If true, attempting to replicate the new functionality in the trialdesign.org https://trialdesign.org/one-page-shell.html#BOIN function about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"}
 }
 \value{
 \code{get.boundary()} returns a list object, including the dose escalation and de-escalation

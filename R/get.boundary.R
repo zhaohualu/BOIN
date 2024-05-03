@@ -26,6 +26,7 @@
 #'               the stopping rule is when \code{extrasafe=TRUE}. A larger value leads
 #'               to a more strict stopping rule. The default value
 #'               (\code{offset=0.05}) generally works well.
+#' @param fix13 a logical flag, default FALSE. If true, attempting to replicate the new functionality in the trialdesign.org https://trialdesign.org/one-page-shell.html#BOIN function about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"                
 #'
 #' @details The dose escalation and deescalation boundaries are all we need to run a
 #'          phase I trial when using the BOIN design. The decision of which dose to
@@ -106,7 +107,8 @@
 #' @export
 get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf = 0.6 *
                             target, p.tox = 1.4 * target, cutoff.eli = 0.95, extrasafe = FALSE,
-                          offset = 0.05)
+                          offset = 0.05,
+                          fix13 = FALSE)
 {
   density1 <- function(p, n, m1, m2) {
     pbinom(m1, n, p) + 1 - pbinom(m2 - 1, n, p)
@@ -180,6 +182,19 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
     if (!is.na(elim[i]) && (b.d[i] > elim[i]))
       b.d[i] = elim[i]
   }
+  # Try to mimic the new functionality in trialdesign.org
+  # Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients
+  if(fix13){
+    cidx3 = which(ntrt ==3)
+    b.e[cidx3] = 0
+    if(b.d[cidx3]<=1){
+      b.d[cidx3] = 2  
+    }
+    if(elim[cidx3]<=1){
+      elim[cidx3] = 2  
+    }
+  }
+  
   boundaries0 = rbind(ntrt, b.e, b.d, elim)[, 1:min(npts, n.earlystop)]
   rownames(boundaries0) = c("Number of patients treated", "Escalate if # of DLT <=",
                             "Deescalate if # of DLT >=", "Eliminate if # of DLT >=")

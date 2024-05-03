@@ -7,7 +7,7 @@
 get.oc(target, p.true, ncohort, cohortsize, n.earlystop=100,
               startdose=1, titration=FALSE, p.saf=0.6*target, p.tox=1.4*target,
               cutoff.eli=0.95,extrasafe=FALSE, offset=0.05, boundMTD=FALSE,
-              ntrial=1000, seed=6)
+              ntrial=1000, seed=6, fix13 = FALSE)
 }
 \arguments{
 \item{target}{the target DLT rate}
@@ -52,6 +52,8 @@ for the selected MTD must be less than de-escalation boundary.}
 \item{ntrial}{the total number of trials to be simulated}
 
 \item{seed}{the random seed for simulation}
+
+\item{fix13}{a logical flag, default FALSE. If true, attempting to replicate the new functionality in the trialdesign.org https://trialdesign.org/one-page-shell.html#BOIN function about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"}
 }
 \value{
 \code{get.oc()} returns the operating characteristics of the BOIN design as a list,
