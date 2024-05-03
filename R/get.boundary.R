@@ -26,8 +26,8 @@
 #'               the stopping rule is when \code{extrasafe=TRUE}. A larger value leads
 #'               to a more strict stopping rule. The default value
 #'               (\code{offset=0.05}) generally works well.
-#' @param fix13 a logical flag, default FALSE. If true, attempting to replicate the new functionality in the trialdesign.org https://trialdesign.org/one-page-shell.html#BOIN function about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"                
-#'
+#' @param fix13 a logical flag, default FALSE. If true, attempting to replicate the new functionality in the https://trialdesign.org/one-page-shell.html#BOIN about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"
+#' 
 #' @details The dose escalation and deescalation boundaries are all we need to run a
 #'          phase I trial when using the BOIN design. The decision of which dose to
 #'          administer to the next cohort of patients does not require complicated
