@@ -7,6 +7,7 @@ The fork starts with BOIN 2.7.2 in May 2024.
 run the following to install this updated BOIN package.
 
 ```r
+install.packages("devtools")
 devtools::install_github("https://github.com/zhaohualu/BOIN")
 library(BOIN)
 ```
