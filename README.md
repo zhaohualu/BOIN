@@ -5,4 +5,8 @@ The goal of this repo is to add/mimic certain functions implemented by the BOIN 
 The fork starts with BOIN 2.7.2 in May 2024. 
 
 Updates:
-* Add a logical argument fix13 in get.oc and get.boundary to implement "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients".
+* Add a logical argument fix3p3 in get.oc and get.boundary to implement 3+3 mimic, including
+	* If none of the phi's and lambda's are specified, use the original logic, phi1 = 0.6 * phi, phi2 = 1.4 * phi, then calculate lambda1 and lambda2
+	* If phi1 and phi2 are specified, calculate lambda1 and lambda 2
+	* If lambda1 and lambda2 are specified, calculate phi1 and phi2
+	* If all are specified, use lambda1 and lambda2, calculate phi1 and phi2, issue a warning message.

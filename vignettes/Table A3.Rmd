@@ -1,0 +1,125 @@
+---
+title: "Table A3"
+author: "Zhaohua Lu, Mia He, Philip He"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Table A3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r}
+library(BOIN)
+```
+
+This document contains the code and results for Table A2.
+
+
+#BOIN (C): $\phi=0.27$, $\phi_2 = 1.4\phi$, $\Phi_S = 0.90$, $m=9$
+
+
+
+```{r}
+pt1 = c(0.27,0.44,0.52,0.61)
+pt2 = c(0.11,0.27,0.42,0.64)
+pt3 = c(0.02,0.11,0.27,0.44)
+pt4 = c(0.05,0.09,0.13,0.27)
+pt5 = c(0.35,0.45,0.55,0.65)
+pt6 = c(0.45,0.55,0.65,0.75)
+pt = list(pt1, pt2, pt3, pt4, pt5, pt6)
+```
+
+```{r}
+s1 = get.oc(target = 0.27, p.true = pt1, p.saf = 0.6*0.27, p.tox = 1.4*0.27, cohortsize = 3,ncohort = 10, n.earlystop = 9, extrasafe = TRUE, offset = 0.05)
+s2 = get.oc(target = 0.27, p.true = pt2, p.saf = 0.6*0.27, p.tox = 1.4*0.27, cohortsize = 3,ncohort = 10, n.earlystop = 9, extrasafe = TRUE, offset = 0.05)
+s3 = get.oc(target = 0.27, p.true = pt3, p.saf = 0.6*0.27, p.tox = 1.4*0.27, cohortsize = 3,ncohort = 10, n.earlystop = 9, extrasafe = TRUE, offset = 0.05)
+s4 = get.oc(target = 0.27, p.true = pt4, p.saf = 0.6*0.27, p.tox = 1.4*0.27, cohortsize = 3,ncohort = 10, n.earlystop = 9, extrasafe = TRUE, offset = 0.05)
+s5 = get.oc(target = 0.27, p.true = pt5, p.saf = 0.6*0.27, p.tox = 1.4*0.27, cohortsize = 3,ncohort = 10, n.earlystop = 9, extrasafe = TRUE, offset = 0.05)
+s6 = get.oc(target = 0.27, p.true = pt6, p.saf = 0.6*0.27, p.tox = 1.4*0.27, cohortsize = 3,ncohort = 10, n.earlystop = 9, extrasafe = TRUE, offset = 0.05)
+sall = list(s1,s2,s3,s4,s5,s6)
+```
+
+```{r}
+
+res = matrix("",nrow = length(sall)*5, ncol=7)
+
+for(j in 1:6){
+  s = sall[[j]]
+  
+  bl = (j-1)* 5
+  
+  res[bl + 1, 5] = round(sum(s$npatients),1)
+  res[bl + 1, 6] = round(s$percentstop,1)
+  if(is.null(s$overdose50)){
+    res[bl + 1, 7] = "-"
+  }else{
+    res[bl + 1, 7] = round(s$overdose50,1)
+  }
+  res[bl + 2,1:4] = pt[[j]]
+  res[bl + 3,1:4] = round(s$selpercent,1) 
+  res[bl + 4,1:4] = round(s$npatients/(sum(s$npatients)),3)*100 
+  
+}
+
+write.table(res,"BOINC.csv",sep=",",row=F,col=F,quote = F)
+```
+
+
+#BOIN (D):  $\phi=0.3$, $\phi_2 = 1.2\phi$, $\Phi_S = 0.90$, $m=6$
+
+
+
+```{r}
+pt1 = c(0.27,0.44,0.52,0.61)
+pt2 = c(0.11,0.27,0.42,0.64)
+pt3 = c(0.02,0.11,0.27,0.44)
+pt4 = c(0.05,0.09,0.13,0.27)
+pt5 = c(0.35,0.45,0.55,0.65)
+pt6 = c(0.45,0.55,0.65,0.75)
+pt = list(pt1, pt2, pt3, pt4, pt5, pt6)
+```
+
+```{r}
+s1 = get.oc(target = 0.3, p.true = pt1, lambda1 = 0.236, lambda2 = 0.329, cohortsize = 3,ncohort = 10, n.earlystop = 6, extrasafe = TRUE, offset = 0.05)
+s2 = get.oc(target = 0.3, p.true = pt2, lambda1 = 0.236, lambda2 = 0.329, cohortsize = 3,ncohort = 10, n.earlystop = 6, extrasafe = TRUE, offset = 0.05)
+s3 = get.oc(target = 0.3, p.true = pt3, lambda1 = 0.236, lambda2 = 0.329, cohortsize = 3,ncohort = 10, n.earlystop = 6, extrasafe = TRUE, offset = 0.05)
+s4 = get.oc(target = 0.3, p.true = pt4, lambda1 = 0.236, lambda2 = 0.329, cohortsize = 3,ncohort = 10, n.earlystop = 6, extrasafe = TRUE, offset = 0.05)
+s5 = get.oc(target = 0.3, p.true = pt5, lambda1 = 0.236, lambda2 = 0.329, cohortsize = 3,ncohort = 10, n.earlystop = 6, extrasafe = TRUE, offset = 0.05)
+s6 = get.oc(target = 0.3, p.true = pt6, lambda1 = 0.236, lambda2 = 0.329, cohortsize = 3,ncohort = 10, n.earlystop = 6, extrasafe = TRUE, offset = 0.05)
+sall = list(s1,s2,s3,s4,s5,s6)
+```
+
+```{r}
+
+res = matrix("",nrow = length(sall)*5, ncol=7)
+
+for(j in 1:6){
+  s = sall[[j]]
+  
+  bl = (j-1)* 5
+  
+  res[bl + 1, 5] = round(sum(s$npatients),1)
+  res[bl + 1, 6] = round(s$percentstop,1)
+  if(is.null(s$overdose50)){
+    res[bl + 1, 7] = "-"
+  }else{
+    res[bl + 1, 7] = round(s$overdose50,1)
+  }
+  res[bl + 2,1:4] = pt[[j]]
+  res[bl + 3,1:4] = round(s$selpercent,1) 
+  res[bl + 4,1:4] = round(s$npatients/(sum(s$npatients)),3)*100 
+  
+}
+
+write.table(res,"BOIND.csv",sep=",",row=F,col=F,quote = F)
+```
+

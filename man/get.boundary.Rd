@@ -9,12 +9,14 @@ get.boundary(
   ncohort,
   cohortsize,
   n.earlystop = 100,
-  p.saf = 0.6 * target,
-  p.tox = 1.4 * target,
+  p.saf = NULL,
+  p.tox = NULL,
+  lambda1 = NULL,
+  lambda2 = NULL,
   cutoff.eli = 0.95,
   extrasafe = FALSE,
   offset = 0.05,
-  fix13 = FALSE
+  fix3p3 = FALSE
 )
 }
 \arguments{
@@ -38,6 +40,8 @@ The default value is \code{p.saf = 0.6 * target}.}
 that deescalation is required. The default value is
 \code{p.tox=1.4*target}.}
 
+\item{lambda1}{escalation boundary}
+
 \item{cutoff.eli}{the cutoff to eliminate an overly toxic dose for safety.
 We recommend the default value (\code{cutoff.eli=0.95}) for general use.}
 
@@ -49,7 +53,12 @@ the stopping rule is when \code{extrasafe=TRUE}. A larger value leads
 to a more strict stopping rule. The default value
 (\code{offset=0.05}) generally works well.}
 
-\item{fix13}{a logical flag, default FALSE. If true, attempting to replicate the new functionality in the trialdesign.org https://trialdesign.org/one-page-shell.html#BOIN function about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"}
+\item{fix3p3}{a logical flag, default FALSE. If true, attempting to replicate the new functionality in 
+the https://trialdesign.org/one-page-shell.html#BOIN to mimic 3+3, including 
+Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when $\phi\in [0.25, 0.279]$.
+Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when $\phi\in [0.28, 0.33]$}
+
+\item{lambba2}{de-escalation boundary}
 }
 \value{
 \code{get.boundary()} returns a list object, including the dose escalation and de-escalation
@@ -97,6 +106,8 @@ The dose escalation and deescalation boundaries are all we need to run a
          lowest dose >=3, and (ii) \eqn{Pr(toxicity\ rate\ of\ the\ lowest\ dose > \code{target} | data)
          > \code{cutoff.eli}-\code{offset}}. As a tradeoff, the strong stopping rule will decrease the
          MTD selection percentage when the lowest dose actually is the MTD.
+
+         If none of the phi's and lambda's are specified, use the original logic, phi1 = 0.6 * phi, phi2 = 1.4 * phi, then calculate lambda1 and lambda2
 }
 \note{
 We should avoid setting the values of \code{p.saf} and \code{p.tox} very close to the

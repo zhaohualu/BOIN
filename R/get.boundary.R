@@ -18,6 +18,8 @@
 #' @param p.tox the lowest toxicity probability that is deemed overly toxic such
 #'              that deescalation is required. The default value is
 #'              \code{p.tox=1.4*target}.
+#' @param lambda1 escalation boundary
+#' @param lambba2 de-escalation boundary
 #' @param cutoff.eli the cutoff to eliminate an overly toxic dose for safety.
 #'                   We recommend the default value (\code{cutoff.eli=0.95}) for general use.
 #' @param extrasafe set \code{extrasafe=TRUE} to impose a more strict stopping rule for extra safety,
@@ -26,7 +28,10 @@
 #'               the stopping rule is when \code{extrasafe=TRUE}. A larger value leads
 #'               to a more strict stopping rule. The default value
 #'               (\code{offset=0.05}) generally works well.
-#' @param fix13 a logical flag, default FALSE. If true, attempting to replicate the new functionality in the https://trialdesign.org/one-page-shell.html#BOIN about "Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients"
+#' @param fix3p3 a logical flag, default FALSE. If true, attempting to replicate the new functionality in 
+#'               the https://trialdesign.org/one-page-shell.html#BOIN to mimic 3+3, including 
+#'               Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when $\phi\in [0.25, 0.279]$.
+#'               Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when $\phi\in [0.28, 0.33]$
 #' 
 #' @details The dose escalation and deescalation boundaries are all we need to run a
 #'          phase I trial when using the BOIN design. The decision of which dose to
@@ -65,6 +70,10 @@
 #'          > \code{cutoff.eli}-\code{offset}}. As a tradeoff, the strong stopping rule will decrease the
 #'          MTD selection percentage when the lowest dose actually is the MTD.
 #'
+#'          If none of the phi's and lambda's are specified, use the original logic, phi1 = 0.6 * phi, phi2 = 1.4 * phi, then calculate lambda1 and lambda2
+#           If phi1 and phi2 are specified, calculate lambda1 and lambda 2
+#           If lambda1 and lambda2 are specified, calculate phi1 and phi2
+#           If all are specified, use lambda1 and lambda2, calculate phi1 and phi2, issue a warning message.
 #' @return  \code{get.boundary()} returns a list object, including the dose escalation and de-escalation
 #'          boundaries \code{$lambda_e} and \code{$lambda_d} and the corresponding decision tables
 #'          \code{$boundary_tab} and \code{$full_boundary_tab}. If \code{extrasafe=TRUE}, the function also returns
@@ -105,10 +114,11 @@
 #'
 #' @import stats
 #' @export
-get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf = 0.6 *
-                            target, p.tox = 1.4 * target, cutoff.eli = 0.95, extrasafe = FALSE,
+get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf = NULL, 
+                          p.tox = NULL, lambda1 = NULL, lambda2 = NULL,
+                          cutoff.eli = 0.95, extrasafe = FALSE,
                           offset = 0.05,
-                          fix13 = FALSE)
+                          fix3p3 = FALSE)
 {
   density1 <- function(p, n, m1, m2) {
     pbinom(m1, n, p) + 1 - pbinom(m2 - 1, n, p)
@@ -121,12 +131,61 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
   }
   if (target < 0.05) {
     stop("the target is too low! ")
-
+    
   }
   if (target > 0.6) {
     stop("the target is too high!")
-
+    
   }
+  
+  
+  # Neither Lambda1 and phi1 specified
+  if((is.null(p.saf)) & (is.null(lambda1))){
+    p.saf = 0.6 * target 
+    lambda1 = log((1 - p.saf)/(1 - target))/log(target *
+                                                  (1 - p.saf)/(p.saf * (1 - target)))
+  }
+  # Neither Lambda2 and phi2 specified
+  if((is.null(p.tox)) & (is.null(lambda2))){
+    p.tox = 1.4 * target
+    lambda2 = log((1 - target)/(1 - p.tox))/log(p.tox * (1 -
+                                                           target)/(target * (1 - p.tox)))
+  }
+  # phi1 specified
+  if(!(is.null(p.saf)) & (is.null(lambda1))){
+    lambda1 = log((1 - p.saf)/(1 - target))/log(target *
+                                                  (1 - p.saf)/(p.saf * (1 - target)))
+  }
+  # phi2 specified
+  if(!(is.null(p.tox)) & (is.null(lambda2))){
+    lambda2 = log((1 - target)/(1 - p.tox))/log(p.tox * (1 -
+                                                           target)/(target * (1 - p.tox)))
+  }
+  # lambda1 specified
+  if((is.null(p.saf)) & (!is.null(lambda1))){
+    o1 = optimize(optim_phi1,interval=c(0,target),phi=target,lambda1 = lambda1)
+    p.saf = o1$minimum
+  }
+  # lambda2 specified
+  if((is.null(p.tox)) & (!is.null(lambda2))){
+    o2 = optimize(optim_phi2,interval=c(target,1),phi=target,lambda2 = lambda2)
+    p.tox = o2$minimum
+  }
+  
+  # Both Lambda1 and phi1 specified
+  if((!is.null(p.saf)) & (!is.null(lambda1))){
+    warnings("Both p.saf and lambda1 are specified, lambda1 will be recalculated from p.saf")
+    lambda1 = log((1 - p.saf)/(1 - target))/log(target *
+                                                  (1 - p.saf)/(p.saf * (1 - target)))
+  }
+  # Both Lambda1 and phi1 specified
+  if((!is.null(p.tox)) & (!is.null(lambda2))){
+    warnings("Both p.tox and lambda2 are specified, lambda2 will be recalculated from p.tox")
+    lambda2 = log((1 - target)/(1 - p.tox))/log(p.tox * (1 -
+                                                           target)/(target * (1 - p.tox)))
+  }
+  
+  
   if ((target - p.saf) < (0.1 * target)) {
     stop("the probability deemed safe cannot be higher than or too close to the target!")
   }
@@ -138,8 +197,9 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
   }
   if (n.earlystop <= 6) {
     warning("the value of n.earlystop is too low to ensure good operating characteristics. Recommend n.earlystop = 9 to 18.")
-
+    
   }
+
   npts = ncohort * cohortsize
   ntrt = NULL
   b.e = NULL
@@ -147,14 +207,11 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
   elim = NULL
   tol<-1e-12
   for (n in 1:npts) {
-    lambda1 = log((1 - p.saf)/(1 - target))/log(target *
-                                                  (1 - p.saf)/(p.saf * (1 - target)))
-    lambda2 = log((1 - target)/(1 - p.tox))/log(p.tox * (1 -
-                                                           target)/(target * (1 - p.tox)))
+
     cutoff1 = floor(lambda1 * n)
-
+    
     cutoff2 = ifelse(abs(round(lambda2 * n) - lambda2 * n) < tol,  round(lambda2 * n)+1, ceiling(lambda2 * n))
-
+    
     ntrt = c(ntrt, n)
     b.e = c(b.e, cutoff1)
     b.d = c(b.d, cutoff2)
@@ -184,14 +241,27 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
   }
   # Try to mimic the new functionality in trialdesign.org
   # Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients
-  if(fix13){
-    cidx3 = which(ntrt ==3)
-    b.e[cidx3] = 0
-    if(b.d[cidx3]<=1){
-      b.d[cidx3] = 2  
+  if(fix3p3){
+    if(phi>=0.25 && phi <=0.279){
+      cidx3 = which(ntrt ==3)
+      if(b.d[cidx3]<=1){
+        b.e[cidx3] = 0
+        b.d[cidx3] = 2
+        elim[cidx3] = 3  
+      }  
     }
-    if(elim[cidx3]<=1){
-      elim[cidx3] = 2  
+    if(phi>=0.28 && phi <=0.33){
+      cidx6 = which(ntrt ==6)
+      if(b.d[cidx6] >= 3 ){
+        b.d[cidx6] = 2
+      }  
+      if(b.e[cidx6] >= 2){
+        b.e[cidx6] = 1
+      }
+      
+      if(elim[cidx6] <=2){
+        elim[cidx6] = 3
+      }
     }
   }
   
@@ -237,7 +307,7 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
     colnames(stopboundary) = rep("", min(npts, n.earlystop))
     out = c(out, list(target = target, cutoff = cutoff.eli - offset, stop_boundary = stopboundary))
   }
- class(out)<-"boin"
+  class(out)<-"boin"
   return(out)
 }
 
