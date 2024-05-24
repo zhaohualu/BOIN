@@ -242,7 +242,7 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
   # Try to mimic the new functionality in trialdesign.org
   # Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients
   if(fix3p3){
-    if(phi>=0.25 && phi <=0.279){
+    if(target>=0.25 && target <=0.279){
       cidx3 = which(ntrt ==3)
       if(b.d[cidx3]<=1){
         b.e[cidx3] = 0
@@ -250,7 +250,7 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
         elim[cidx3] = 3  
       }  
     }
-    if(phi>=0.28 && phi <=0.33){
+    if(target>=0.28 && target <=0.33){
       cidx6 = which(ntrt ==6)
       if(b.d[cidx6] >= 3 ){
         b.d[cidx6] = 2
