@@ -319,7 +319,7 @@ get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
   for (i in 1:ndose) {
     selpercent[i] = sum(dselect == i)/ntrial * 100
   }
-  if (length(which(p.true == target)) > 0) {
+  # if (length(which(p.true == target)) > 0) {
     if (which(p.true == target) == ndose - 1) {
       overdosing50 = mean(N[, p.true > target] > 0.5 *
                             npts) * 100
@@ -346,17 +346,17 @@ get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
                                        cutoff.eli = cutoff.eli, extrasafe = extrasafe,
                                        offset = offset, ntrial = ntrial, dose = 1:ndose),
                flowchart = TRUE, lambda_e = lambda_e, lambda_d = lambda_d)
-  }
-  else {
-    out = list(selpercent = selpercent, npatients = nptsdose,
-               ntox = ntoxdose, totaltox = sum(Y)/ntrial, totaln = sum(N)/ntrial,
-               percentstop = sum(dselect == 99)/ntrial * 100, simu.setup = data.frame(target = target,
-                                                                                      p.true = p.true, ncohort = ncohort, cohortsize = cohortsize,
-                                                                                      startdose = startdose, p.saf = p.saf, p.tox = p.tox,
-                                                                                      cutoff.eli = cutoff.eli, extrasafe = extrasafe,
-                                                                                      offset = offset, ntrial = ntrial, dose = 1:ndose),
-               flowchart = TRUE, lambda_e = lambda_e, lambda_d = lambda_d)
-  }
+  # }
+  # else {
+  #   out = list(selpercent = selpercent, npatients = nptsdose,
+  #              ntox = ntoxdose, totaltox = sum(Y)/ntrial, totaln = sum(N)/ntrial,
+  #              percentstop = sum(dselect == 99)/ntrial * 100, simu.setup = data.frame(target = target,
+  #                                                                                     p.true = p.true, ncohort = ncohort, cohortsize = cohortsize,
+  #                                                                                     startdose = startdose, p.saf = p.saf, p.tox = p.tox,
+  #                                                                                     cutoff.eli = cutoff.eli, extrasafe = extrasafe,
+  #                                                                                     offset = offset, ntrial = ntrial, dose = 1:ndose),
+  #              flowchart = TRUE, lambda_e = lambda_e, lambda_d = lambda_d)
+  # }
   class(out)<-"boin"
   return(out)
 }
