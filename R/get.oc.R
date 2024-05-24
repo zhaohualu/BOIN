@@ -320,22 +320,22 @@ get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
     selpercent[i] = sum(dselect == i)/ntrial * 100
   }
   # if (length(which(p.true == target)) > 0) {
-    if (which(p.true == target) == ndose - 1) {
-      overdosing50 = mean(N[, p.true > target] > 0.5 *
-                            npts) * 100
-      overdosing60 = mean(N[, p.true > target] > 0.6 *
-                            npts) * 100
-      overdosing80 = mean(N[, p.true > target] > 0.8 *
-                            npts) * 100
-    }
-    else {
-      overdosing50 = mean(rowSums(N[, p.true > target]) >
+    # if (which(p.true == target) == ndose - 1) {
+    #   overdosing50 = mean(N[, p.true > target] > 0.5 *
+    #                         npts) * 100
+    #   overdosing60 = mean(N[, p.true > target] > 0.6 *
+    #                         npts) * 100
+    #   overdosing80 = mean(N[, p.true > target] > 0.8 *
+    #                         npts) * 100
+    # }
+    # else {
+      overdosing50 = mean(rowSums(N[, p.true > target, drop=F]) >
                             0.5 * npts) * 100
-      overdosing60 = mean(rowSums(N[, p.true > target]) >
+      overdosing60 = mean(rowSums(N[, p.true > target, drop=F]) >
                             0.6 * npts) * 100
-      overdosing80 = mean(rowSums(N[, p.true > target]) >
+      overdosing80 = mean(rowSums(N[, p.true > target, drop=F]) >
                             0.8 * npts) * 100
-    }
+    # }
     out = list(selpercent = selpercent, npatients = nptsdose,
                ntox = ntoxdose, totaltox = sum(Y)/ntrial, totaln = sum(N)/ntrial,
                percentstop = sum(dselect == 99)/ntrial * 100, 
