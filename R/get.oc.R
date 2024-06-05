@@ -4,7 +4,8 @@
 #' Obtain the operating characteristics of the BOIN design for single agent trials by simulating trials.
 #'
 #' @usage get.oc(target, p.true, ncohort, cohortsize, n.earlystop=100,
-#'               startdose=1, titration=FALSE, p.saf=0.6*target, p.tox=1.4*target,
+#'               startdose=1, titration=FALSE, 
+#'               p.saf = NULL, p.tox = NULL, lambda1 = NULL, lambda2 = NULL,
 #'               cutoff.eli=0.95,extrasafe=FALSE, offset=0.05, boundMTD=FALSE,
 #'               ntrial=1000, seed=6, fix3p3 = FALSE)
 #'
@@ -21,13 +22,19 @@
 #' @param startdose the starting dose level for the trial
 #' @param titration set \code{titration=TRUE} to perform dose escalation with cohort size = 1 to accelerate dose escalation at the begining of the trial.
 #' @param p.saf the highest toxicity probability that is deemed subtherapeutic
-#'              (i.e. below the MTD) such that dose escalation should be undertaken.
-#'              The default value is \code{p.saf=0.6*target}.
+#'              (i.e., below the MTD) such that dose escalation should be made.
+#'              If p.saf is not specified and lambda1 is not specified, 
+#'              the default value of p.saf is \code{p.saf = 0.6 * target}.
+#'              If p.saf is not specified and lambda1 is specified, 
+#'              p.saf is calculated according to lambda1
 #' @param p.tox the lowest toxicity probability that is deemed overly toxic such
-#'              that deescalation is required. The default value is
-#'              \code{p.tox=1.4*target}).
-#' @param lambda1 escalation boundary
-#' @param lambba2 de-escalation boundary
+#'              that deescalation is required. 
+#'              If p.tox is not specified and lambda2 is not specified,
+#'              The default value is \code{p.tox=1.4*target}.
+#'              If p.tox is not specified and lambda2 is specified, 
+#'              p.tox is calculated according to lambda2
+#' @param lambda1 escalation boundary. If not specified, lambda1 is calculated according to p.saf. If p.saf is specified, lambda1 will be overridden.
+#' @param lambba2 de-escalation boundary. If not specified, lambda2 is calculated according to p.tox. If p.tox is specified, lambda2 will be overridden.
 #' @param cutoff.eli the cutoff to eliminate an overly toxic dose for safety.
 #'                  We recommend the default value of (\code{cutoff.eli=0.95}) for general use.
 #' @param extrasafe set \code{extrasafe=TRUE} to impose a more stringent stopping rule
@@ -127,8 +134,9 @@
 #' plot(oc)  # plot flowchart of the BOIN design and design operating characteristics
 #' @export
 get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
-                    startdose = 1, titration = FALSE, p.saf = NULL, p.tox = NULL, 
-                    lambda1 = NULL, lambda2 = NULL, cutoff.eli = 0.95, extrasafe = FALSE, offset = 0.05,boundMTD=FALSE,
+                    startdose = 1, titration = FALSE, 
+                    p.saf = NULL, p.tox = NULL, lambda1 = NULL, lambda2 = NULL, 
+                    cutoff.eli = 0.95, extrasafe = FALSE, offset = 0.05,boundMTD=FALSE,
                     ntrial = 1000, seed = 6, fix3p3 = FALSE)
 {
   if (target < 0.05) {

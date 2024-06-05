@@ -34,13 +34,21 @@ of early stopping.}
 
 \item{p.saf}{the highest toxicity probability that is deemed subtherapeutic
 (i.e., below the MTD) such that dose escalation should be made.
-The default value is \code{p.saf = 0.6 * target}.}
+If p.saf is not specified and lambda1 is not specified, 
+the default value of p.saf is \code{p.saf = 0.6 * target}.
+If p.saf is not specified and lambda1 is specified, 
+p.saf is calculated according to lambda1}
 
 \item{p.tox}{the lowest toxicity probability that is deemed overly toxic such
-that deescalation is required. The default value is
-\code{p.tox=1.4*target}.}
+that deescalation is required. 
+If p.tox is not specified and lambda2 is not specified,
+The default value is \code{p.tox=1.4*target}.
+If p.tox is not specified and lambda2 is specified, 
+p.tox is calculated according to lambda2}
 
-\item{lambda1}{escalation boundary}
+\item{lambda1}{escalation boundary. If not specified, lambda1 is calculated according to p.saf. If p.saf is specified, lambda1 will be overridden.}
+
+\item{lambda2}{de-escalation boundary. If not specified, lambda2 is calculated according to p.tox. If p.tox is specified, lambda2 will be overridden.}
 
 \item{cutoff.eli}{the cutoff to eliminate an overly toxic dose for safety.
 We recommend the default value (\code{cutoff.eli=0.95}) for general use.}
@@ -55,10 +63,8 @@ to a more strict stopping rule. The default value
 
 \item{fix3p3}{a logical flag, default FALSE. If true, attempting to replicate the new functionality in 
 the https://trialdesign.org/one-page-shell.html#BOIN to mimic 3+3, including 
-Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when $\phi\in [0.25, 0.279]$.
-Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when $\phi\in [0.28, 0.33]$}
-
-\item{lambba2}{de-escalation boundary}
+Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when \eqn{\phi\in [0.25, 0.279]}.
+Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when \eqn{\phi\in [0.28, 0.33]}.}
 }
 \value{
 \code{get.boundary()} returns a list object, including the dose escalation and de-escalation

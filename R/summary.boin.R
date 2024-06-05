@@ -229,6 +229,9 @@ summary.boin<- function (object, ...)
       cat("percentage of early stopping due to toxicity:",
           formatC(object$percentstop, digits = 1, format = "f"),
           "% \n")
+      cat("risk of overdosing (>50% of patients treated above the MTD):",
+          formatC(object$overdose50, digits = 1, format = "f"),
+          "% \n")
       cat("risk of overdosing (>60% of patients treated above the MTD):",
           formatC(object$overdose60, digits = 1, format = "f"),
           "% \n")

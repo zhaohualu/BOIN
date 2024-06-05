@@ -14,12 +14,18 @@
 #'                    of early stopping.
 #' @param p.saf the highest toxicity probability that is deemed subtherapeutic
 #'              (i.e., below the MTD) such that dose escalation should be made.
-#'              The default value is \code{p.saf = 0.6 * target}.
+#'              If p.saf is not specified and lambda1 is not specified, 
+#'              the default value of p.saf is \code{p.saf = 0.6 * target}.
+#'              If p.saf is not specified and lambda1 is specified, 
+#'              p.saf is calculated according to lambda1
 #' @param p.tox the lowest toxicity probability that is deemed overly toxic such
-#'              that deescalation is required. The default value is
-#'              \code{p.tox=1.4*target}.
-#' @param lambda1 escalation boundary
-#' @param lambba2 de-escalation boundary
+#'              that deescalation is required. 
+#'              If p.tox is not specified and lambda2 is not specified,
+#'              The default value is \code{p.tox=1.4*target}.
+#'              If p.tox is not specified and lambda2 is specified, 
+#'              p.tox is calculated according to lambda2
+#' @param lambda1 escalation boundary. If not specified, lambda1 is calculated according to p.saf. If p.saf is specified, lambda1 will be overridden.
+#' @param lambba2 de-escalation boundary. If not specified, lambda2 is calculated according to p.tox. If p.tox is specified, lambda2 will be overridden.
 #' @param cutoff.eli the cutoff to eliminate an overly toxic dose for safety.
 #'                   We recommend the default value (\code{cutoff.eli=0.95}) for general use.
 #' @param extrasafe set \code{extrasafe=TRUE} to impose a more strict stopping rule for extra safety,
@@ -114,8 +120,8 @@
 #'
 #' @import stats
 #' @export
-get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf = NULL, 
-                          p.tox = NULL, lambda1 = NULL, lambda2 = NULL,
+get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, 
+                          p.saf = NULL, p.tox = NULL, lambda1 = NULL, lambda2 = NULL,
                           cutoff.eli = 0.95, extrasafe = FALSE,
                           offset = 0.05,
                           fix3p3 = FALSE)
@@ -245,9 +251,7 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
     if(target>=0.25 && target <=0.279){
       cidx3 = which(ntrt ==3)
       if(b.d[cidx3]<=1){
-        b.e[cidx3] = 0
         b.d[cidx3] = 2
-        elim[cidx3] = 3  
       }  
     }
     if(target>=0.28 && target <=0.33){
@@ -257,10 +261,6 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100, p.saf 
       }  
       if(b.e[cidx6] >= 2){
         b.e[cidx6] = 1
-      }
-      
-      if(elim[cidx6] <=2){
-        elim[cidx6] = 3
       }
     }
   }
