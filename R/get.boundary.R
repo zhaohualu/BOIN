@@ -25,7 +25,7 @@
 #'              If p.tox is not specified and lambda2 is specified, 
 #'              p.tox is calculated according to lambda2
 #' @param lambda1 escalation boundary. If not specified, lambda1 is calculated according to p.saf. If p.saf is specified, lambda1 will be overridden.
-#' @param lambba2 de-escalation boundary. If not specified, lambda2 is calculated according to p.tox. If p.tox is specified, lambda2 will be overridden.
+#' @param lambda2 de-escalation boundary. If not specified, lambda2 is calculated according to p.tox. If p.tox is specified, lambda2 will be overridden.
 #' @param cutoff.eli the cutoff to eliminate an overly toxic dose for safety.
 #'                   We recommend the default value (\code{cutoff.eli=0.95}) for general use.
 #' @param extrasafe set \code{extrasafe=TRUE} to impose a more strict stopping rule for extra safety,
@@ -36,8 +36,8 @@
 #'               (\code{offset=0.05}) generally works well.
 #' @param fix3p3 a logical flag, default FALSE. If true, attempting to replicate the new functionality in 
 #'               the https://trialdesign.org/one-page-shell.html#BOIN to mimic 3+3, including 
-#'               Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when $\phi\in [0.25, 0.279]$.
-#'               Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when $\phi\in [0.28, 0.33]$
+#'               Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when \eqn{\phi\in [0.25, 0.279]}.
+#'               Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when \eqn{\phi\in [0.28, 0.33]}.
 #' 
 #' @details The dose escalation and deescalation boundaries are all we need to run a
 #'          phase I trial when using the BOIN design. The decision of which dose to
