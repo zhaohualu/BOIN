@@ -21,7 +21,7 @@ Description: The Bayesian optimal interval (BOIN) design is a novel phase I
     has a substantially lower risk of assigning patients to subtherapeutic or overly
     toxic doses. For tutorial, please check Yan et al. (2020) <doi:10.18637/jss.v094.i13>.
 License: GPL-2
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Encoding: UTF-8
 Packaged: 2021-01-19 14:57:45 UTC; jianga
 NeedsCompilation: no

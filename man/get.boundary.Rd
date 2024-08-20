@@ -16,7 +16,8 @@ get.boundary(
   cutoff.eli = 0.95,
   extrasafe = FALSE,
   offset = 0.05,
-  fix3p3 = FALSE
+  fix3p3 = FALSE,
+  DE3o9 = DE3o9
 )
 }
 \arguments{
@@ -65,6 +66,8 @@ to a more strict stopping rule. The default value
 the https://trialdesign.org/one-page-shell.html#BOIN to mimic 3+3, including 
 Modify the decision from de-escalation to stay when observing 1 DLT out of 3 patients when \eqn{\phi\in [0.25, 0.279]}.
 Modify the decision from stay to de-escalation when observing 2 DLTs out of 6 patients when \eqn{\phi\in [0.28, 0.33]}.}
+
+\item{DE3o9}{if fix3p3 is TRUE and phi is in [0.28, 0.33], i.e., de-escalation when observing 2 DLTs out of 6 patients, turning this option (default FALSE) to TRUE allowing de-escalation when observing 3 DLTs out of 9}
 }
 \value{
 \code{get.boundary()} returns a list object, including the dose escalation and de-escalation
