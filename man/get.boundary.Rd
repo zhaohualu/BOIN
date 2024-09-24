@@ -17,7 +17,7 @@ get.boundary(
   extrasafe = FALSE,
   offset = 0.05,
   fix3p3 = FALSE,
-  DE3o9 = DE3o9
+  DE3o9 = FALSE
 )
 }
 \arguments{

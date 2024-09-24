@@ -126,7 +126,7 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100,
                           cutoff.eli = 0.95, extrasafe = FALSE,
                           offset = 0.05,
                           fix3p3 = FALSE, 
-                          DE3o9 = DE3o9)
+                          DE3o9 = FALSE)
 {
   density1 <- function(p, n, m1, m2) {
     pbinom(m1, n, p) + 1 - pbinom(m2 - 1, n, p)
