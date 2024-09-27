@@ -264,18 +264,25 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100,
       if(b.e[cidx6] >= 2){
         b.e[cidx6] = 1
       }
-      
-      if(DE3o9){
-        cidx9 = which(ntrt ==9)
-        if(b.d[cidx9] >= 4 ){
-          b.d[cidx9] = 3
-          if(b.e[cidx9] >= 3){
-            b.e[cidx9] = 2
-          }
-        }  
-      }
     }
   }
+  
+  if(DE3o9){
+    
+    print(ntrt)
+    print(b.e)
+    print(b.d)
+    cidx9 = which(ntrt ==9)
+    if(b.d[cidx9] >= 4 ){
+      b.d[cidx9] = 3
+      if(b.e[cidx9] >= 3){
+        b.e[cidx9] = 2
+      }
+    }
+    print(b.e)
+    print(b.d)
+  }
+  
   
   boundaries0 = rbind(ntrt, b.e, b.d, elim)[, 1:min(npts, n.earlystop)]
   rownames(boundaries0) = c("Number of patients treated", "Escalate if # of DLT <=",
