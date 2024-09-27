@@ -269,12 +269,11 @@ get.boundary <- function (target, ncohort, cohortsize, n.earlystop = 100,
         cidx9 = which(ntrt ==9)
         if(b.d[cidx9] >= 4 ){
           b.d[cidx9] = 3
+          if(b.e[cidx9] >= 3){
+            b.e[cidx9] = 2
+          }
         }  
-        if(b.e[cidx9] >= 3){
-          b.e[cidx9] = 2
-        }
       }
-      
     }
   }
   
