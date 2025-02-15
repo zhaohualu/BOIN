@@ -221,6 +221,7 @@ get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
   Y = matrix(rep(0, ndose * ntrial), ncol = ndose)
   N = matrix(rep(0, ndose * ntrial), ncol = ndose)
   dselect = rep(0, ntrial)
+  lastdoselevel = rep(0, ntrial)
   
   if (cohortsize > 1) {
     temp = get.boundary(target, ncohort, cohortsize, n.earlystop=ncohort*cohortsize,
@@ -315,6 +316,8 @@ get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
     }
     Y[trial, ] = y
     N[trial, ] = n
+    lastdoselevel[trial] = d
+    
     if (earlystop == 1) {
       dselect[trial] = 99
     }
@@ -355,7 +358,8 @@ get.oc <- function (target, p.true, ncohort, cohortsize, n.earlystop = 100,
                                        startdose = startdose, p.saf = p.saf, p.tox = p.tox,
                                        cutoff.eli = cutoff.eli, extrasafe = extrasafe,
                                        offset = offset, ntrial = ntrial, dose = 1:ndose),
-               flowchart = TRUE, lambda_e = lambda_e, lambda_d = lambda_d)
+               flowchart = TRUE, lambda_e = lambda_e, lambda_d = lambda_d,
+               lastdoselevel = lastdoselevel, mtdselected = dselect)
   # }
   # else {
   #   out = list(selpercent = selpercent, npatients = nptsdose,
